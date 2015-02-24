@@ -87,7 +87,7 @@ function saveShortUrl(content, req, res) {
     if (content.slug) {
         saveWithSlug(req, content, res);
     } else {
-        saveUrlContents(req, content.url, shortId.generate(), res, true);
+        saveUrlContents(req, content.url, shortId.generate(), res, false);
     }
 }
 function sendExistingUrlDetails(resp, req, res) {

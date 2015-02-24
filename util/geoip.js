@@ -8,7 +8,7 @@ exports.getGeoData = function(remoteIp){
         app_logger.info("Fetching ip address details for ip "+remoteIp+" with Url "+url);
         request.get(url, function(err, res, data){
            if(err){reject(err); return;}
-            resolve(data);
+            resolve(JSON.parse(data));
         });
     });
 
