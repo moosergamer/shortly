@@ -8,16 +8,10 @@ exports.generateShortURL = function (req, res) {
     if (content.url) {
         Url.isExisting(content.url)
             .then(function (resp) {
-                var urlData = resp.hits.hits[0]._source;
-                saveUsageInfo(req, resp.hits.hits[0]._id);
-                res.status(200).send({shortUrl: urlData.short_url, originalUrl: urlData.original_url});
+                sendExistingUrlDetails(resp, req, res);
             })
             .catch(function (resp) {
-                if (content.slug) {
-                    saveWithSlug(req, content, res);
-                } else {
-                    saveUrlContents(req, content.url, shortId.generate(), res, true);
-                }
+                saveShortUrl(content, req, res);
             })
             .catch(function (err) {
                 sendErrorResponse(res, err);
@@ -31,10 +25,7 @@ exports.redirectShortUrl = function (req, res) {
     if (req.params && req.params.shortUrl) {
         Url.isSlugAvailable(req.params.shortUrl)
             .then(function (response) {
-                var urlData = response.hits.hits[0]._source;
-                app_logger.info("Redirecting to the url " + urlData.original_url);
-                saveUsageInfo(req, response.hits.hits[0]._id);
-                res.redirect(urlData.original_url);
+                saveUsageInfoAndRedirectTheUser(response, req, res);
             })
             .catch(function (err) {
                 sendErrorResponse(res, err);
@@ -90,3 +81,22 @@ var saveUsageInfo = function (req, shortUrlId) {
         });
 };
 
+function saveShortUrl(content, req, res) {
+    if (content.slug) {
+        saveWithSlug(req, content, res);
+    } else {
+        saveUrlContents(req, content.url, shortId.generate(), res, true);
+    }
+}
+function sendExistingUrlDetails(resp, req, res) {
+    var urlData = resp.hits.hits[0]._source;
+    saveUsageInfo(req, resp.hits.hits[0]._id);
+    res.status(200).send({shortUrl: urlData.short_url, originalUrl: urlData.original_url});
+}
+
+function saveUsageInfoAndRedirectTheUser(response, req, res) {
+    var urlData = response.hits.hits[0]._source;
+    app_logger.info("Redirecting to the url " + urlData.original_url);
+    saveUsageInfo(req, response.hits.hits[0]._id);
+    res.redirect(urlData.original_url);
+}

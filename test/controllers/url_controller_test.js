@@ -14,10 +14,14 @@ var esClient = require('../../bin/es_client');
 
 describe('Generate short url or redirect if a short url is given', function () {
     this.timeout(2000);
-    var sandbox;
+    var sandbox, usageMock, urlMock,esMock;
     var res = {};
     beforeEach(function () {
         sandbox = sinon.sandbox.create();
+        usageMock = sandbox.mock(UsageInfo);
+        urlMock = sandbox.mock(Url);
+        esMock = sandbox.mock(esClient);
+
         res = {status: function (statusCode) {
                             this.statusCode = statusCode;return res;
                             },
@@ -43,11 +47,13 @@ describe('Generate short url or redirect if a short url is given', function () {
         sandbox.stub(Url, "isSlugAvailable").resolves({hits: {hits: [
             {_source: {original_url: "www.xyz.com"}, _id: "ABCDEFGHI"}
         ]}});
-        sandbox.stub(UsageInfo, "get").resolves({});
-        sandbox.stub(esClient, "save").resolves({});
+        usageMock.expects("get").once().resolves({});
+        esMock.expects("save").never().resolves({});
         urlController.redirectShortUrl(req, res);
         setTimeout(function () {
             expect(res.responseMessage).to.equal("www.xyz.com");
+            usageMock.verify();
+            esMock.verify();
             done();
         }, 10);
     });
@@ -72,6 +78,7 @@ describe('Generate short url or redirect if a short url is given', function () {
         setTimeout(function () {
             generalExpectationsForUrlSave(res);
             expect(res.responseMessage.originalUrl).to.equal("www.happyweekend.com");
+            verifyAll([usageMock, esMock, urlMock]);
             done()
         }, 20);
     });
@@ -86,6 +93,7 @@ describe('Generate short url or redirect if a short url is given', function () {
             generalExpectationsForUrlSave(res);
             expect(res.responseMessage.originalUrl).to.equal("www.happyweekend.com");
             expect(res.responseMessage.shortUrl).to.equal("http://short.ly/abcdefg");
+            verifyAll([usageMock, esMock, urlMock]);
             done()
         }, 20);
 
@@ -107,11 +115,16 @@ describe('Generate short url or redirect if a short url is given', function () {
         },20)
 
     });
+
     function stubAllRequiredMethodsInUrlSave(url) {
         url = url || "www.happyweekend.com";
-        sandbox.stub(UsageInfo, "get").resolves({});
-        sandbox.stub(Url, "isExisting").withArgs(url).rejects({});
-        sandbox.stub(esClient, "save").resolves({});
+        usageMock.expects("get").once().resolves({});
+        urlMock.expects("isExisting").once().withArgs(url).rejects({});
+        esMock.expects("save").once().resolves({});
+    }
+
+    function verifyAll(mocks) {
+        mocks.forEach(function(value){value.verify()});
     }
 
     function generalExpectationsForUrlSave(res, statusCode) {

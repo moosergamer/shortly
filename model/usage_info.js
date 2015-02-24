@@ -51,6 +51,7 @@ UsageInfo.get = function (req) {
         var usageInfo = {};
         usageInfo["generalUsage"] = generalUsageInfo;
         usageInfo["geoInfo"] = geoInfo;
+        usageInfo["remote_ip"] = req._remoteAddress;
         return usageInfo;
     }).catch(function (err) {
             app_logger.error("Error in creating usage info ", err);
