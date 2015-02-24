@@ -1,16 +1,19 @@
 # short.ly - url shortener
 
 **Description**
+
 This project helps you to generate short urls for a given url. As part of the short url generation, client has an option
 of sending an optional "slug" which will be tried to use before generating a random slug.
 
 Once the short url is accessed, user would be redirected to the corresponding website.
 
 **Play with a running instance**
+
 A running instance of this app is deployed on **heroku**. You can access it **[here](http://getshort.herokuapp.com/)**.
 The first request to the app might be slow as it is running with free tier on heroku. See the *API* section to understand the different api's to use.
 
 **Setting up the project**
+
 This is a simple express based nodejs app. It uses bluebird for promise based callbacks(to avoid callback hells).
 Some more interesting libraries used are lodash(collection utility), forever(to restart the node instances in case of failures),
 bunyan(json based logger), short-id(unique short id generation library), ua-parser-js(analyses the user agent and generates some info).
