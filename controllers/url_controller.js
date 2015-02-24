@@ -37,7 +37,8 @@ exports.redirectShortUrl = function (req, res) {
 };
 
 var saveUrlContents = function (req, originalUrl, slug, res, slugRespected) {
-    var url = new Url({original_url: originalUrl, short_url: "http://short.ly/" + slug, slug: slug});
+    var shortUrl = "http://" + req.headers.host + "/" + slug;
+    var url = new Url({original_url: originalUrl, short_url: shortUrl, slug: slug});
     url.save()
         .then(function (saveResp) {
             saveUsageInfo(req, saveResp._id);

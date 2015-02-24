@@ -15,7 +15,8 @@ var esClient = require('../../bin/es_client');
 describe('Generate short url or redirect if a short url is given', function () {
     this.timeout(2000);
     var sandbox, usageMock, urlMock,esMock;
-    var res = {};
+    var req = {},
+        res = {};
     beforeEach(function () {
         sandbox = sinon.sandbox.create();
         usageMock = sandbox.mock(UsageInfo);
@@ -33,17 +34,18 @@ describe('Generate short url or redirect if a short url is given', function () {
                             },
                statusCode: 0,
                responseMessage: ""};
+        req['params'] = {};
+        req['params']['shortUrl'] = "Xzwtysz";
+        req['headers'] = {host:"short.ly"};
+        req['body'] = {url: "www.happyweekend.com"};
     });
 
     afterEach(function () {
         sandbox.restore();
-        res = {};
+        req={}; res = {};
     });
 
     it('should redirect to the original url if the short url is present in our system', function (done) {
-        var req = {};
-        req['params'] = {};
-        req['params']['shortUrl'] = "Xzwtysz";
         sandbox.stub(Url, "isSlugAvailable").resolves({hits: {hits: [
             {_source: {original_url: "www.xyz.com"}, _id: "ABCDEFGHI"}
         ]}});
@@ -59,7 +61,6 @@ describe('Generate short url or redirect if a short url is given', function () {
     });
 
     it('should fail with 400 error if short url parameter is not sent as part of the request', function (done) {
-        var req = {};
         req['params'] = {};
         urlController.redirectShortUrl(req, res);
         setTimeout(function () {
@@ -72,7 +73,6 @@ describe('Generate short url or redirect if a short url is given', function () {
 
     it('Given a original/long url without optional slug, and provided short url is not generated before, ' +
         'a new short url need to be generated and saved', function (done) {
-        var req = {body: {url: "www.happyweekend.com"}};
         stubAllRequiredMethodsInUrlSave();
         urlController.generateShortURL(req, res);
         setTimeout(function () {
@@ -85,7 +85,7 @@ describe('Generate short url or redirect if a short url is given', function () {
 
     it('Given a original/long url with slug, and provided short url is not generated before, ' +
         'a new short url needs to be generated and saved', function(done){
-        var req = {body: {url: "www.happyweekend.com",slug:"abcdefg"}};
+        req['body'] = {url: "www.happyweekend.com",slug:"abcdefg"};
         stubAllRequiredMethodsInUrlSave();
         sandbox.stub(Url, "isSlugAvailable").withArgs("abcdefg").resolves({hits:{total:0}});
         urlController.generateShortURL(req, res);
@@ -101,7 +101,7 @@ describe('Generate short url or redirect if a short url is given', function () {
     it('Given a original/long url with/without slug, and provided short url is already generated before, ' +
         'should fetch the existing respond with existing short url details instead of re saving', function(done){
         var longUrl = "www.happyweekend.com";
-        var req = {body: {url: longUrl,slug:"abcdefg"}};
+        req['body'] = {url: longUrl,slug:"abcdefg"};
         var esResponse = {hits:{hits:[{_source:{short_url:"abcdefg",original_url:longUrl},_id:"12345"}]}};
         sandbox.stub(UsageInfo, "get").resolves({});
         sandbox.stub(Url, "isExisting").withArgs(longUrl).resolves(esResponse);
