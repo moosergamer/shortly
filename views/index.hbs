@@ -1,1 +1,29 @@
-Hi there's nothing here. You should use the /shortly api to generate short urls
+You should use the /shortly api to generate short urls.
+<p>
+    <b>Example 1 to generate a url</b>
+    <i>
+        curl -X POST -H "Content-Type: application/json" -d '{"url":"http://lastminute.com/","slug":"sml"}'
+        http://getshort.herokuapp.com/shortly
+    </i>
+</p>
+
+<p>
+    <b>Example 1 to access a short url</b>
+    <i>
+        curl -X GET -H "Content-Type: application/json" http://getshort.herokuapp.com/sml
+    </i>
+</p>
+
+<p>
+    <b>Example 2 to generate a url</b>
+    <i>
+        curl -X POST -H "Content-Type: application/json" -d '{"url":"http://hackerne.ws/"}' http://getshort.herokuapp.com/shortly
+    </i>
+</p>
+
+<p>
+    <b>Example 2 to access a short url</b>
+    <i>
+        curl -X GET -H "Content-Type: application/json" http://getshort.herokuapp.com/X1uUagJd
+    </i>
+</p>

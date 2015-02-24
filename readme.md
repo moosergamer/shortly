@@ -39,7 +39,7 @@ Below is the curl request to represent the same.
 
 *Example1 without slug*
 ```
-url -X POST -H "Content-Type: application/json" -d '{"url":"http://www.oneandonlylengthiestwebsiteyoucaneversee.com/remember"}' http://localhost:3000/shortly
+curl -X POST -H "Content-Type: application/json" -d '{"url":"http://www.oneandonlylengthiestwebsiteyoucaneversee.com/remember"}' http://localhost:3000/shortly
 ```
 
 Output for the above curl request will look like
