@@ -65,8 +65,8 @@ exports.fetchBy = function (key, value, index, type) {
     })
 };
 
-exports.flushAll = function(indexName, type){
-    return new Promise(function(resolve, reject){
+exports.flushAll = function (indexName, type) {
+    return new Promise(function (resolve, reject) {
         getEsClient().indices.delete({
             index: indexName,
             timeout: 5000000
@@ -81,3 +81,4 @@ exports.flushAll = function(indexName, type){
         });
     });
 };
+

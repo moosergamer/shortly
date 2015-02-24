@@ -2,3 +2,4 @@
 node_modules/
 shortly.log
 forever.err
+npm-debug.log
