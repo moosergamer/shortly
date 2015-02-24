@@ -35,7 +35,7 @@ UsageInfo.getGeneralUsageInfo = function (req) {
 
 UsageInfo.getGeoInfo = function (req) {
     return new Promise(function (resolve, reject) {
-        GeoIp.getGeoData(req._remoteAddress)
+        GeoIp.getGeoData(req.headers['x-forwarded-for'] || req._remoteAddress)
             .then(function (res) {
                 resolve(res);
             }).catch(function (err) {
@@ -51,7 +51,7 @@ UsageInfo.get = function (req) {
         var usageInfo = {};
         usageInfo["generalUsage"] = generalUsageInfo;
         usageInfo["geoInfo"] = geoInfo;
-        usageInfo["remoteIp"] = req._remoteAddress;
+        usageInfo["remoteIp"] = req.headers['x-forwarded-for'] || req._remoteAddress;
         return usageInfo;
     }).catch(function (err) {
             app_logger.error("Error in creating usage info ", err);
