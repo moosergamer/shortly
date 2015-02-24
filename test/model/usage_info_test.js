@@ -65,9 +65,10 @@ describe("Save url usage information ", function () {
         var expectedOutput = usageInfoOutput();
         geoMock.expects("getGeoData").withArgs("46.19.37.108").resolves(geoJson);
         UsageInfo.get(req).then(function(res){
-            expect(Object.keys(res).length).to.equal(2);
+            expect(Object.keys(res).length).to.equal(3);
             expect(res).to.have.property("generalUsage");
             expect(res).to.have.property("geoInfo");
+            expect(res).to.have.property("remoteIp");
             expect(res.toString()).to.equal(expectedOutput.toString());
             done();
         });
