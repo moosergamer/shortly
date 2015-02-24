@@ -11,7 +11,6 @@ exports.generateShortURL = function (req, res) {
                 var urlData = resp.hits.hits[0]._source;
                 saveUsageInfo(req, resp.hits.hits[0]._id);
                 res.status(200).send({shortUrl: urlData.short_url, originalUrl: urlData.original_url});
-
             })
             .catch(function (resp) {
                 if (content.slug) {

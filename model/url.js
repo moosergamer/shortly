@@ -18,7 +18,7 @@ return esClient.save(this.data, "shortly", "shorturl")
 
 Url.isSlugAvailable = function (slug) {
     return new Promise(function (resolve, reject) {
-        esClient.fetchBy('slug', slug).then(function (resp) {
+        esClient.fetchBy('slug', slug, "shortly", "shorturl").then(function (resp) {
             resolve(resp);
         }).catch(function (err) {
                 app_logger.error("Error in fetching slug details", err);
@@ -29,7 +29,7 @@ Url.isSlugAvailable = function (slug) {
 
 Url.isExisting = function(url){
     return new Promise(function(resolve, reject){
-        esClient.fetchBy("original_url", url)
+        esClient.fetchBy("original_url", url, "shortly", "shorturl")
             .then(function(resp){
                 if(resp.hits.total > 0){
                     resolve(resp);

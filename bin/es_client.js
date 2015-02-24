@@ -34,15 +34,15 @@ exports.save = function (doc, indexName, type) {
 
 };
 
-exports.fetchBy = function (key, value) {
+exports.fetchBy = function (key, value, index, type) {
     var keyValue = {};
     keyValue[key] = value;
     return new Promise(function (resolve, reject) {
         var client = getEsClient();
         app_logger.info("Fetching by key and value", key, value);
         var options = {
-            index: "shortly",
-            type: "shorturl",
+            index: index,
+            type: type,
             body: {
                 "query": {
                     "filtered": {
@@ -56,6 +56,7 @@ exports.fetchBy = function (key, value) {
             }
         };
         options["body"]["query"]["filtered"]["filter"]["term"] = keyValue;
+
         client.search(options).then(function (resp) {
             resolve(resp);
         }).catch(function (err) {
@@ -64,3 +65,19 @@ exports.fetchBy = function (key, value) {
     })
 };
 
+exports.flushAll = function(indexName, type){
+    return new Promise(function(resolve, reject){
+        getEsClient().indices.delete({
+            index: indexName,
+            timeout: 5000000
+        }, function (error, response) {
+            if (error) {
+                app_logger.error("Error in flushing the doc ", error);
+                reject(error);
+            } else {
+                app_logger.info("Flushed the docs for ", type);
+                resolve(response);
+            }
+        });
+    });
+};

@@ -12,10 +12,14 @@ var UsageInfo = function (data) {
 UsageInfo.prototype.data = {};
 
 UsageInfo.prototype.save = function () {
-    return esClient.save(this.data, "shortly", "usage_info")
-        .then(function (res) {
-            return res;
-        })
+    if(Object.keys(this.data).length > 1){
+        return esClient.save(this.data, "shortly", "usage_info")
+            .then(function (res) {
+                return res;
+            })
+    }else{
+        return new Promise(function(resolve, reject){return {};});
+    }
 };
 
 UsageInfo.getGeneralUsageInfo = function (req) {
@@ -45,6 +49,7 @@ UsageInfo.get = function (req) {
         var usageInfo = {};
         usageInfo["generalUsage"] = generalUsageInfo;
         usageInfo["geoInfo"] = geoInfo;
+        console.log("adfadsf");
         return usageInfo;
     });
 };

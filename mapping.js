@@ -6,3 +6,12 @@
 //}
 //
 //}
+
+//PUT /shortly/shorturl/_mapping
+//{
+//
+//    "properties": {
+//    "slug":{"type":"string","index" : "not_analyzed" }
+//}
+//
+//}
