@@ -2,10 +2,11 @@ var app_logger = require("../logger/logger");
 var Url = require("../model/url");
 var UsageInfo = require("../model/usage_info");
 var shortId = require('shortid');
-
+var nodeUrl = require('url');
 exports.generateShortURL = function (req, res) {
     var content = req.body;
     if (content.url) {
+        content.url = nodeUrl.format(content.url);
         Url.isExisting(content.url)
             .then(function (resp) {
                 sendExistingUrlDetails(resp, req, res);
