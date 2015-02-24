@@ -7,7 +7,7 @@ of sending an optional "slug" which will be tried to use before generating a ran
 Once the short url is accessed, user would be redirected to the corresponding website.
 
 **Play with a running instance**
-A running instance of this app is deployed on heroku. You can access it [here](http://getshort.herokuapp.com/).
+A running instance of this app is deployed on **heroku**. You can access it **[here](http://getshort.herokuapp.com/)**.
 The first request to the app might be slow as it is running with free tier on heroku. See the *API* section to understand the different api's to use.
 
 **Setting up the project**
@@ -27,15 +27,17 @@ Elastic search is used as the data store to store all the short url details and 
 6. Once the setup is done for the next time runs you can chose to use `setupAndStart.sh` on the root folder.
 
 **API**
-There re two different api's
+
+There are two different api's
+
 1. *POST* request to generate short url.
+
 2. *GET* request To access short url which redirect the user to the original website.
 
 Request usage is being tracked(more about it in the following sections)
 
 ### Generating Short Url
-If you are running this application locally, you can access the api at `http://localhost:3000/shortly`.
-Below is the curl request to represent the same.
+If you are running this application locally, you can access the api at `http://localhost:3000/shortly`. Below is the curl request to represent the same.
 
 *Example1 without slug*
 ```
@@ -58,7 +60,7 @@ Output for the above curl request will look like. "slugRespected" will return fa
 ```
 
 ### Retrieving the short URL
-If you are running the application locally, you can send the short url request to `http://localhost:300`.
+If you are running the application locally, you can send the short url request to `http://localhost:3000`.
 Below is the curl request  demonstrating the same.
 
 ```
@@ -113,6 +115,7 @@ short url with id `"shorturl_id": "AUu8LZeWKBGmE_eRwB8d"`
 ```
 
 **Technology Choices**
+
 As this is the short url generation system, number of requests which this system needs to handle is extremely high.
 At a high level though the data looks like a structured one, there's a huge provision of storing lot of unstructured data
 along with the short url generation. Ex: Usage Information can be completely unstructured. Based on the above two considerations,
@@ -130,7 +133,10 @@ based test framework. For most of the test libraries, their enhanced promise bas
 testing of promise based code.
 
 **Scope of future work**
+
 1. Expose some apis to get the usage information based on different attributes.
+
 2. Create a dashboard which shows usage statistics based on browsers, geo location, referrers, operating systems, devices, etc,.
+
 3. Write a complete automation suite to test the apis end to end. Currently controllers are only unit tested.
 
